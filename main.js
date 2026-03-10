@@ -119,7 +119,7 @@ function renderPanels() {
       html += `
         <div class="vote-row">
           <div>${player.name}</div>
-          <input type="number" min="1" max="10"
+          <input type="number" min="1" max="10" step="0.1"
           id="${voter.id}_${player.id}" />
         </div>
       `;
@@ -176,7 +176,7 @@ window.saveVotes = async function (voterName) {
       round_id: currentRoundId,
       player_id: player.id,
       voter_name: voterName,
-      score: Number(input.value),
+      score: parseFloat(input.value.replace(",", ".")),
     });
 
   }
