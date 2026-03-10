@@ -51,16 +51,20 @@ tr:hover {
   background: #334155;
 }
 .leader {
-  background: linear-gradient(90deg, #bd960b, #bd770d);
+  background: linear-gradient(90deg, #bd770d, #bd960b);
   font-weight: bold;
   color: black;
-  border-radius: 12px;
-}
-.leader td:first-child {
-  background: none; /* Medal pozostaje normalny */
-  border-radius: 0;
 }
 
+.leader td:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.leader td:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
 /* Medale */
 .medal {
   font-size: 18px;
@@ -137,7 +141,9 @@ button:hover {
 .absence-btn {
   background: #7d4040;
   margin-top: 10px;
-  width: 40%;
+  padding: 4px 10px;
+  width: auto;
+  display: inline-block;
   font-weight: bold;
 }
 
