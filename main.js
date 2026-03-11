@@ -90,7 +90,11 @@ function renderRanking() {
     const diff = Math.round(p.rating - (yesterdayRatings[p.id] || p.rating));
 
     rankingTable.innerHTML += `
-      <tr class="${i === 0 ? 'leader' : ''}">
+      <tr class="${
+          i === 0 ? 'leader gold' :
+          i === 1 ? 'silver' :
+          i === 2 ? 'bronze' : ''
+      }">
         <td>${medal || i + 1}</td>
         <td>${p.name}</td>
         <td>${Math.round(p.rating)}</td>
@@ -114,17 +118,21 @@ function renderPanels() {
 
     let html = `<h3>${voter.name} ocenia:</h3>`;
 
+    html += `<div class="vote-row-container">`;
+
     players.forEach((player) => {
 
       html += `
         <div class="vote-row">
           <div>${player.name}</div>
-          <input type="number" min="1" max="10" step="0.1"
+          <input type="number" min="1" max="10"
           id="${voter.id}_${player.id}" />
         </div>
       `;
 
     });
+
+html += `</div>`;
 
     html += `
       <button onclick="saveVotes('${voter.name}')">Zapisz oceny</button>
