@@ -1,152 +1,214 @@
-/* Body i container */
+/* ============================= */
+/* SKALA STRONY */
+
 body {
   font-family: 'Segoe UI', sans-serif;
   background: linear-gradient(45deg, #0f172a, #0e0f21);
   color: #f1f5f9;
   margin: 0;
+  font-size: 20px; /* większy tekst */
 }
+
+/* ============================= */
+/* CONTAINER */
+
 .container {
-  max-width: 1100px;
+  max-width: 1600px;
   margin: auto;
-  padding: 30px;
+  padding: 50px;
 }
+
 h1 {
   text-align: center;
-  margin-bottom: 30px;
+  margin-bottom: 40px;
+  font-size: 48px;
 }
 
-/* Karty */
+h2 {
+  font-size: 36px;
+}
+
+h3 {
+  font-size: 32px;
+}
+
+/* ============================= */
+/* KARTY */
+
 .card {
   background: linear-gradient(45deg, #1e293b, #1d3254);
-  padding: 25px;
-  margin: 20px 0;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-  transition: transform 0.2s ease;
-}
-.card:hover {
-  transform: translateY(-4px);
+  padding: 40px;
+  margin: 30px 0;
+  border-radius: 20px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.4);
 }
 
-/* Wyśrodkowanie */
 .center {
   text-align: center;
 }
 
-/* Tabela */
+/* ============================= */
+/* TABELA */
+
 table {
   width: 100%;
   border-collapse: separate;
-  border-spacing: 0 8px;
+  border-spacing: 0 18px;
 }
-th,
+
+th {
+  font-size: 28px;
+  padding: 16px;
+}
+
 td {
-  padding: 12px;
+  padding: 22px;
+  font-size: 30px;
+  font-weight: 600;
   text-align: center;
+  background: transparent;
 }
+
+/* wiersze */
+
 tr {
-  transition: all 0.3s ease;
+  background: linear-gradient(45deg,#1e293b,#1d3254);
 }
-tr:hover {
-  background: #334155;
+
+/* podium */
+
+tr.gold {
+  background: linear-gradient(45deg, #bd770d, #bd960b);
+  color: black;
+  animation: goldGlow 2.5s infinite;
 }
-.leader {
-  background: linear-gradient(90deg, #bd770d, #bd960b);
-  font-weight: bold;
+
+tr.silver {
+  background: linear-gradient(45deg,#e5e7eb,#9ca3af);
   color: black;
 }
 
-.leader td:first-child {
-  border-top-left-radius: 12px;
-  border-bottom-left-radius: 12px;
-}
-
-.leader td:last-child {
-  border-top-right-radius: 12px;
-  border-bottom-right-radius: 12px;
-}
-/* Medale */
-.medal {
-  font-size: 18px;
-}
-
-/* Różnice punktów */
-.positive {
-  color: #22c55e;
-  font-weight: bold;
-}
-.negative {
-  color: #ef4444;
-  font-weight: bold;
-}
-
-/* Animacje lidera */
-@keyframes glow {
-  0% {
-    box-shadow: 0 0 0px gold;
-  }
-  50% {
-    box-shadow: 0 0 25px gold;
-  }
-  100% {
-    box-shadow: 0 0 0px gold;
-  }
-}
-
-/* Inputy i przyciski */
-input {
-  padding: 8px;
-  border-radius: 8px;
-  border: none;
-  margin: 5px 0;
-}
-button {
-  padding: 8px 14px;
-  border-radius: 8px;
-  border: none;
-  background: #72898f;
+tr.bronze {
+  background: linear-gradient(45deg,#cd7f32,#92400e);
   color: white;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-button:hover {
-  background: #51808f;
-  transform: scale(1.05);
 }
 
-/* Panele oceniania */
-.panel-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  align-items: center;
+@keyframes goldGlow {
+
+  0% { box-shadow:0 0 12px rgba(255,215,0,0.5); }
+
+  50% { box-shadow:0 0 40px rgba(255,215,0,1); }
+
+  100% { box-shadow:0 0 12px rgba(255,215,0,0.5); }
+
 }
-.panel-row input {
-  width: 60px;
-  text-align: center;
+
+/* ============================= */
+/* ZMIANA PUNKTÓW */
+
+.positive {
+  color:#22c55e;
+  font-weight:bold;
 }
+
+.negative {
+  color:#ef4444;
+  font-weight:bold;
+}
+
+/* ============================= */
+/* INPUTY */
+
+input {
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  margin:8px 0;
+  font-size:22px;
+}
+
+/* ============================= */
+/* PRZYCISKI */
+
+button {
+
+  padding:16px 26px;
+  border-radius:14px;
+  border:none;
+  background:#72898f;
+  color:white;
+  cursor:pointer;
+  font-size:22px;
+  font-weight:bold;
+  transition:all .2s ease;
+}
+
+button:hover {
+
+  background:#51808f;
+  transform:scale(1.05);
+
+}
+
+/* ============================= */
+/* PANELE OCENIANIA */
+
+.vote-row-container {
+
+  display:grid;
+  grid-template-columns: repeat(3,1fr);
+  gap:28px;
+  margin-top:20px;
+  margin-bottom:40px; /* dodatkowa przestrzeń */
+
+}
+
+/* pojedynczy gracz */
+
 .vote-row {
-  margin: 12px 0;
-  text-align: center;
+
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+  font-size:24px;
+
 }
 
 .vote-row input {
-  width: 100px;
-  height: 45px;
-  font-size: 20px;
-  text-align: center;
-  border-radius: 12px;
+
+  width:120px;
+  height:60px;
+  font-size:26px;
+  text-align:center;
+  border-radius:14px;
+
 }
 
+/* ============================= */
+/* PRZYCISKI PANELU */
+
+.panel-buttons {
+
+  margin-top:80px; /* duża przestrzeń od pól ocen */
+  display:flex;
+  justify-content:center;
+  gap:40px;
+
+}
+
+
+
 .absence-btn {
-  background: #7d4040;
-  margin-top: 10px;
-  padding: 8px 14px;
-  width: auto;
-  display: inline-block;
-  font-weight: bold;
+
+  background:#7d4040;
+  font-size:22px;
+  padding:16px 26px;
+
 }
 
 .absence-btn:hover {
-  background: #662929;
+
+  background:#662929;
+
 }
