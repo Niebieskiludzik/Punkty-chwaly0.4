@@ -12,15 +12,21 @@
     🏆 Ranking Chwały
   </div>
 
+  <div class="nav-center">
+    <span id="navbarDate"></span>
+  </div>
+
   <div class="nav-right">
 
     <div id="loginBox">
       <input id="email" placeholder="email">
       <input id="password" type="password" placeholder="hasło">
-      <button onclick="login()">Zaloguj</button>
+      <button id="loginBtn" onclick="login()">Zaloguj</button>
+      <div id="loginError"></div>
     </div>
 
-    <div id="logoutBox" style="display:none;">
+    <div id="userBox" style="display:none;">
+      <span id="userName"></span>
       <button onclick="logout()">Wyloguj</button>
     </div>
 
