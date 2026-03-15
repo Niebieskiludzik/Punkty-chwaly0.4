@@ -1,9 +1,8 @@
-const supabase = window.supabase.createClient(
-'https://wzanqzcjrpbhocrfcciy.supabase.co',
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJIUzI1NiIsInR5cCI6IkpXVCJ9'
-);
+// używamy supabase z main.js
 
-const daysContainer=document.getElementById("daysContainer");
+document.addEventListener("DOMContentLoaded", async () => {
+
+const daysContainer = document.getElementById("daysContainer");
 
 function getDays(){
 
@@ -20,6 +19,8 @@ days.push(d.toISOString().split("T")[0]);
 }
 
 return days;
+
+};
 
 }
 
