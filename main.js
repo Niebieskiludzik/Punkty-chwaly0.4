@@ -368,6 +368,25 @@ document.getElementById("navbarDate").innerText =
 
 }
 
+async function loadBoiskoCounter(){
+
+const today=new Date().toISOString().split("T")[0];
+
+const {data}=await supabase
+.from("field_meetups")
+.select("*")
+.eq("date",today)
+.eq("status","yes");
+
+const willCome=data.length;
+
+const totalPlayers=players.length;
+
+document.getElementById("boiskoCounter").innerText=
+willCome+" / "+totalPlayers+" osób będzie dziś";
+
+}
+
 async function init() {
 
   console.log('INIT START');
@@ -427,6 +446,8 @@ async function init() {
   await ensureRound(datePicker.value);
 
   updateNavbarDate();
+
+  loadBoiskoCounter();
 
   await loadYesterdayRatings();
 
