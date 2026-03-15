@@ -311,27 +311,29 @@ const {data}=await supabase.auth.getUser();
 const loginBox=document.getElementById("loginBox");
 const logoutBox=document.getElementById("logoutBox");
 const userName=document.getElementById("userName");
-
-const addPlayerSection=document.getElementById("newPlayerName").parentElement;
+const panelsDiv=document.getElementById("panels");
 const dateBox=document.getElementById("dateBox");
+const newPlayerName=document.getElementById("newPlayerName");
 
 const lastEmail=localStorage.getItem("lastEmail");
-if(lastEmail) document.getElementById("email").value=lastEmail;
+if(lastEmail && document.getElementById("email")){
+document.getElementById("email").value=lastEmail;
+}
 
 if(!data.user){
 
-panelsDiv.style.display="none";
-loginBox.style.display="block";
-logoutBox.style.display="none";
-addPlayerSection.style.display="none";
-dateBox.style.display="none";
+if(panelsDiv) panelsDiv.style.display="none";
+if(loginBox) loginBox.style.display="block";
+if(logoutBox) logoutBox.style.display="none";
+if(dateBox) dateBox.style.display="none";
+if(newPlayerName) newPlayerName.parentElement.style.display="none";
 
 }else{
 
-panelsDiv.style.display="block";
-loginBox.style.display="none";
-logoutBox.style.display="block";
-dateBox.style.display="block";
+if(panelsDiv) panelsDiv.style.display="block";
+if(loginBox) loginBox.style.display="none";
+if(logoutBox) logoutBox.style.display="block";
+if(dateBox) dateBox.style.display="block";
 
 const {data:player}=await supabase
 .from('players')
@@ -339,18 +341,25 @@ const {data:player}=await supabase
 .eq('email',data.user.email)
 .single();
 
+if(userName && player){
+
 userName.innerHTML=
 `<span class="avatar">${player.avatar||"👤"}</span> ${player.name}`;
 
-if(player&&player.role==="admin"){
-addPlayerSection.style.display="block";
+}
+
+if(player && player.role==="admin"){
+if(newPlayerName) newPlayerName.parentElement.style.display="block";
 }else{
-addPlayerSection.style.display="none";
+if(newPlayerName) newPlayerName.parentElement.style.display="none";
 }
 
 }
 
+if(datePicker){
 await ensureRound(datePicker.value);
+}
+
 await loadYesterdayRatings();
 await loadPlayers();
 
