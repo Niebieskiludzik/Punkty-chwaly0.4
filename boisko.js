@@ -1,7 +1,10 @@
-const supabaseClient = window.supabase.createClient(
-'https://wzanqzcjrpbhocrfcciy.supabase.co',
-'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind6YW5xemNqcnBiaG9jcmZjY2l5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE0MzQ4MjUsImV4cCI6MjA4NzAxMDgyNX0.VNer3odvLPJzBbecICFZFw86SXvvCbEZDQNVciEm97k'
-);
+document.addEventListener("DOMContentLoaded", async () => {
+    
+  initAuthUI(); // teraz auth.js musi być załadowany PRZED main.js/boisko.js
+    
+  const supabase = window.supabaseClient; // lokalnie w funkcji — OK
+
+});
 
 const daysContainer = document.getElementById("daysContainer");
 
