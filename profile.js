@@ -102,6 +102,7 @@ document.getElementById("profileCard").innerHTML = `
   <div class="profile-history">
     📅 Przez ostatnie 30 dni:
     <b>${last30days.toFixed(1).replace(".", ",")}</b>
+    punktów.
   </div>
   
   <div class="profile-stats">
