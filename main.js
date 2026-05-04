@@ -310,14 +310,14 @@ window.goToProfile = function(id) {
 
       html += `</div>`;
 
-      if (role === "admin") {
-        html += `
-          <div class="panel-buttons">
-            <button onclick="saveVotes('${voter.name}')">Zapisz oceny</button>
-            <button class="absence-btn" onclick="markAbsent('${voter.id}')">Nieobecność</button>
-          </div>
-        `;
-      }
+     if (role === "admin" || role === "player") {
+      html += `
+        <div class="panel-buttons">
+          <button onclick="saveVotes('${voter.name}')">Zapisz oceny</button>
+          <button class="absence-btn" onclick="markAbsent('${voter.id}')">Nieobecność</button>
+        </div>
+      `;
+    }
 
       card.innerHTML = html;
       panelsDiv.appendChild(card);
@@ -329,34 +329,80 @@ window.goToProfile = function(id) {
 async function calculateAndSaveMVP() {
   if (!currentRoundId) return;
 
-  const { data: history, error } = await supabase
-    .from("ranking_history")
-    .select("player_id, points")
-    .eq("round_id", currentRoundId)
-    .gt("points", 0)
-    .order("points", { ascending: false })
-    .limit(1)
+  // 🔎 znajdź aktualną rundę
+  const { data: currentRound } = await supabase
+    .from("rounds")
+    .select("round_date")
+    .eq("id", currentRoundId)
+    .single();
+
+  if (!currentRound) return;
+
+  // 🔎 znajdź poprzednią rundę (dzień wcześniej)
+  const prevDate = new Date(currentRound.round_date);
+  prevDate.setDate(prevDate.getDate() - 1);
+
+  const prevDateStr = prevDate.toISOString().split("T")[0];
+
+  const { data: prevRound } = await supabase
+    .from("rounds")
+    .select("id")
+    .eq("round_date", prevDateStr)
     .maybeSingle();
 
-  if (error || !history) {
-    console.error("MVP SAVE ERROR:", error);
-    return;
+  // 🔎 pobierz obecne punkty
+  const { data: today } = await supabase
+    .from("ranking_history")
+    .select("player_id, points")
+    .eq("round_id", currentRoundId);
+
+  if (!today || today.length === 0) return;
+
+  // 🔎 pobierz wczorajsze punkty (jeśli istnieją)
+  let yesterdayMap = {};
+
+  if (prevRound) {
+    const { data: yesterday } = await supabase
+      .from("ranking_history")
+      .select("player_id, points")
+      .eq("round_id", prevRound.id);
+
+    yesterday?.forEach(row => {
+      yesterdayMap[row.player_id] = row.points;
+    });
   }
 
+  // 🔥 licz gain
+  let bestPlayer = null;
+  let bestGain = -Infinity;
+
+  today.forEach(p => {
+    const prev = yesterdayMap[p.player_id] ?? 0;
+    const gain = p.points - prev;
+
+    if (gain > bestGain && gain > 0) {
+      bestGain = gain;
+      bestPlayer = p.player_id;
+    }
+  });
+
+  if (!bestPlayer) return;
+
+  // usuń stare MVP tej rundy
   await supabase
     .from("mvp_history")
     .delete()
     .eq("round_id", currentRoundId);
 
+  // zapisz nowe MVP
   await supabase
     .from("mvp_history")
     .insert({
       round_id: currentRoundId,
-      player_id: history.player_id,
-      points_gain: history.points
+      player_id: bestPlayer,
+      points_gain: bestGain
     });
 }
-
   
   /* ================= SAVE ================= */
 
@@ -616,7 +662,7 @@ window.giveBonus = async function () {
       rounds(round_date)
     `)
     .gt("points_gain", 0)
-    .order("created_at", { ascending: false })
+    .order("rounds(round_date)", { ascending: false }) // 🔥 KLUCZOWA ZMIANA
     .limit(1)
     .maybeSingle();
 
