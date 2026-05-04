@@ -76,16 +76,9 @@ achievements.sort((a, b) => {
       return;
     }
 
-    const mvpCount = achievements.filter(a => a.code?.startsWith("mvp_")).length;
-    const header = document.getElementById("playerHeader");
-      if (mvpCount > 0) {
-         header.innerHTML += `
-          <div class="profile-box">
-            🏆 MVP: <b>${mvpCount}</b> razy
-          </div>
-        `;
-      }
 
+const header = document.getElementById("playerHeader");
+    
     async function checkTop1(playerId) {
 
   const { data: rounds } = await supabase
@@ -122,6 +115,44 @@ achievements.sort((a, b) => {
     addAchievement(playerId, "top1_10", "Dominacja", "10 dni na 1 miejscu", "purple");
 
 }
+
+// 🔥 policz MVP z historii
+const { data: mvpList } = await supabase
+  .from("mvp_history")
+  .select(`
+    round_id,
+    rounds!inner(round_date)
+  `)
+  .eq("player_id", playerId)
+  .gt("points_gain", 0)
+  .order("rounds.round_date", { ascending: false });
+
+const mvpCount = mvpList?.length || 0;
+
+// 🔥 znajdź achievement MVP
+const mvpAchievement = achievements.find(a => a.code === "mvp_first");
+
+// 🔥 jeśli istnieje → zmień tekst
+if (mvpAchievement && mvpCount > 0) {
+  mvpAchievement.name = "MVP dnia";
+
+  mvpAchievement.description = `
+  Zdobyto ${mvpCount} MVP dnia
+  <div class="mvp-hover">
+    ${mvpList.map(m => `
+      <div>
+        ${new Date(m.rounds.round_date).toLocaleDateString("pl-PL")}
+      </div>
+    `).join("")}
+  </div>
+`;
+
+  // 🔥 kolor zależny od ilości
+  if (mvpCount >= 20) mvpAchievement.rarity = "gold";
+  else if (mvpCount >= 5) mvpAchievement.rarity = "purple";
+  else mvpAchievement.rarity = "green";
+}
+    
 ///
     grid.innerHTML = achievements.map(a => `
       <div class="achievement-card ${a.rarity}">
