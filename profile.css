@@ -94,14 +94,15 @@
   padding: 12px;
   border-radius: 12px;
   text-align: center;
+  position: relative;
 }
 
 /* kolory */
-.achievement-card.gray { background: #555; }
-.achievement-card.green { background: #1f7a1f; }
-.achievement-card.blue { background: #1f3a7a; }
-.achievement-card.purple { background: #4a1f7a; }
-.achievement-card.gold { background: #7a6a1f; }
+.achievement-card.gray { background: linear-gradient(90deg,rgba(148, 148, 148, 1) 0%, rgba(79, 79, 79, 1) 100%); }
+.achievement-card.green { background: linear-gradient(90deg,rgba(106, 176, 40, 1) 0%, rgba(19, 110, 29, 1) 100%); }
+.achievement-card.blue { background: linear-gradient(90deg,rgba(98, 163, 227, 1) 0%, rgba(30, 90, 150, 1) 40%, rgba(25, 49, 128, 1) 100%); }
+.achievement-card.purple { background: linear-gradient(90deg,rgba(160, 83, 237, 1) 0%, rgba(77, 74, 189, 1) 50%, rgba(69, 30, 133, 1) 100%); }
+.achievement-card.gold { background: linear-gradient(90deg,rgba(227, 203, 98, 1) 0%, rgba(156, 132, 37, 1) 50%, rgba(130, 116, 8, 1) 100%); }
 
 .ach-icon {
   font-size: 24px;
@@ -137,4 +138,35 @@
 .achievements-btn:hover {
   background: #2a1740;
   transform: scale(1.05);
+}
+
+.mvp-box {
+  position: relative;
+  cursor: pointer;
+}
+
+.mvp-big {
+  font-size: 28px;
+}
+
+.mvp-hover {
+  display: none;
+  position: absolute;
+  top: 60px;
+  left: 0;
+  background: #111;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 14px;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+  width: 180px;
+}
+.mvp-box:hover .mvp-hover {
+  display: block;
+}
+
+.achievement-card:hover .mvp-hover {
+  display: block;
 }
