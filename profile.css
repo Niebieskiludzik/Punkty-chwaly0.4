@@ -88,6 +88,7 @@
   grid-template-columns: repeat(3, 1fr); /* 🔥 3 kolumny */
   gap: 12px;
   margin-top: 15px;
+  overflow: visible;
 }
 
 .achievement-card {
@@ -95,6 +96,7 @@
   border-radius: 12px;
   text-align: center;
   position: relative;
+  overflow: visible;
 }
 
 /* kolory */
@@ -151,22 +153,55 @@
 
 .mvp-hover {
   display: none;
+
   position: absolute;
-  top: 60px;
-  left: 0;
-  background: #111;
-  padding: 10px;
-  border-radius: 10px;
+  top: 110%; /* pod kartą */
+  left: 50%;
+  transform: translateX(-50%);
+
+  background: #1a1a1a;
+  color: white;
+
+  padding: 12px;
+  border-radius: 12px;
+
   font-size: 14px;
-  z-index: 10;
-  max-height: 200px;
+  text-align: center;
+
+  min-width: 160px;
+  max-height: 220px;
   overflow-y: auto;
-  width: 180px;
+
+  box-shadow: 0 8px 25px rgba(0,0,0,0.4);
+
+  z-index: 999; /* 🔥 NAJWAŻNIEJSZE */
 }
+
 .mvp-box:hover .mvp-hover {
   display: block;
 }
 
 .achievement-card:hover .mvp-hover {
   display: block;
+}
+
+.mvp-hover div {
+  padding: 4px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.mvp-hover div:last-child {
+  border-bottom: none;
+}
+
+.mvp-hover::after {
+  content: "";
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  border-width: 6px;
+  border-style: solid;
+  border-color: transparent transparent #1a1a1a transparent;
 }
