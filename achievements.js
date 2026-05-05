@@ -119,13 +119,28 @@ const header = document.getElementById("playerHeader");
 // 🔥 policz MVP z historii
 const { data: mvpList } = await supabase
   .from("mvp_history")
-  .select(`
-    round_id,
-    rounds!inner(round_date)
-  `)
+  .select("round_id")
   .eq("player_id", playerId)
-  .gt("points_gain", 0)
-  .order("rounds.round_date", { ascending: false });
+  .gt("points_gain", 0);
+
+let dates = [];
+
+if (mvpList?.length) {
+
+  const roundIds = mvpList.map(m => m.round_id);
+
+  const { data: rounds } = await supabase
+    .from("rounds")
+    .select("id, round_date")
+    .in("id", roundIds);
+
+  const roundMap = {};
+  rounds?.forEach(r => {
+    roundMap[r.id] = r.round_date;
+  });
+
+  dates = mvpList.map(m => roundMap[m.round_id]).filter(Boolean);
+}
 
 const mvpCount = mvpList?.length || 0;
 
@@ -139,9 +154,9 @@ if (mvpAchievement && mvpCount > 0) {
   mvpAchievement.description = `
   Zdobyto ${mvpCount} MVP dnia
   <div class="mvp-hover">
-    ${mvpList.map(m => `
+    ${dates.map(d => `
       <div>
-        ${new Date(m.rounds.round_date).toLocaleDateString("pl-PL")}
+        ${new Date(d).toLocaleDateString("pl-PL")}
       </div>
     `).join("")}
   </div>
