@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Rankingi statystyk</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+<div class="navbar">
+
+  <div class="nav-left">
+    🏆 Ranking Chwały
+  </div>
+
+  <div class="nav-center">
+    <span id="navbarDate"></span>
+  </div>
+
+  <div class="nav-right">
+
+    <div id="loginBox">
+      <input id="email" placeholder="email">
+      <input id="password" type="password" placeholder="hasło">
+      <button id="loginBtn" onclick="login()">Zaloguj</button>
+      <div id="loginError"></div>
+    </div>
+
+    <div id="userBox" style="display:none;">
+      <span id="userName"></span>
+      <button onclick="logout()">Wyloguj</button>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="container">
+  <h1>📊 Rankingi statystyk</h1>
+
+  <div class="stats-tabs" id="statsTabs"></div>
+  <div class="stats-summary" id="statsSummary">Ładowanie...</div>
+  <div class="stats-ranking-list" id="statsRankingList"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="rankingi.js"></script>
+
+</body>
+</html>
