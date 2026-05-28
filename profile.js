@@ -146,6 +146,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   const top3 = [...filtered14].sort((a, b) => b.score - a.score).slice(0, 3);
   const low3 = [...filtered14].sort((a, b) => a.score - b.score).slice(0, 3);
 
+  //<div class="nationalityFlag">
+   //   ${player.nationality}
+  //  </div>
+
+  
   // 🔹 Render profilu
   const cardEl = document.getElementById("profileCard");
   if (!cardEl) return;
@@ -157,9 +162,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     <div class="profile-name"> 
       ${player.name} 
-    <div class="nationalityFlag">
-      ${player.nationality}
-    </div>
+
     </div>
     <div class="profile-points">
       Punkty: <b>${totalPoints.toFixed(3).replace(".", ",")}</b>
