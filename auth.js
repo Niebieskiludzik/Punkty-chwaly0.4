@@ -7,6 +7,52 @@ window.supabaseClient = window.supabase.createClient(
 function showLoader(){ console.warn("loader not ready"); }
 function hideLoaderSuccess(){}
 
+function loadSharedNavStyles() {
+  if (document.querySelector('link[href="nav.css"]')) return;
+
+  const link = document.createElement("link");
+  link.rel = "stylesheet";
+  link.href = "nav.css";
+  document.head.appendChild(link);
+}
+
+function initGlobalNavMenu() {
+  loadSharedNavStyles();
+
+  const navLeft = document.querySelector(".nav-left");
+  if (!navLeft || navLeft.querySelector(".nav-menu-wrap")) return;
+
+  const menu = document.createElement("div");
+  menu.className = "nav-menu-wrap";
+  menu.innerHTML = `
+    <button class="nav-menu-button" type="button" aria-label="Menu">☰</button>
+    <div class="nav-menu-panel">
+      <a href="index.html">🏆 Ranking główny</a>
+      <a href="ranking.html">📅 Ranking miesięczny</a>
+      <a href="rankingi.html">📊 Rankingi statystyk</a>
+      <a href="boisko.html">⚽ Umawianie na boisko</a>
+    </div>
+  `;
+
+  navLeft.prepend(menu);
+
+  const button = menu.querySelector(".nav-menu-button");
+  button.addEventListener("click", event => {
+    event.stopPropagation();
+    menu.classList.toggle("open");
+  });
+
+  document.addEventListener("click", () => {
+    menu.classList.remove("open");
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", initGlobalNavMenu);
+} else {
+  initGlobalNavMenu();
+}
+
 // 🔐 INIT UI
 window.initAuthUI = async function () {
 
