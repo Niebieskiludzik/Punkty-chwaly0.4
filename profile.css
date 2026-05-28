@@ -99,6 +99,15 @@
   overflow: visible;
 }
 
+.achievement-card:hover,
+.achievement-card.mvp-open {
+  z-index: 1000;
+}
+
+.achievement-card.mvp-card {
+  cursor: pointer;
+}
+
 /* kolory */
 .achievement-card.gray { background: linear-gradient(90deg,rgba(148, 148, 148, 1) 0%, rgba(79, 79, 79, 1) 100%); }
 .achievement-card.green { background: linear-gradient(90deg,rgba(106, 176, 40, 1) 0%, rgba(19, 110, 29, 1) 100%); }
@@ -155,7 +164,7 @@
   display: none;
 
   position: absolute;
-  top: 110%; /* pod kartą */
+  top: 100%; /* bez przerwy między kartą i listą */
   left: 50%;
   transform: translateX(-50%);
 
@@ -174,14 +183,15 @@
 
   box-shadow: 0 8px 25px rgba(0,0,0,0.4);
 
-  z-index: 999; /* 🔥 NAJWAŻNIEJSZE */
+  z-index: 1001; /* 🔥 NAJWAŻNIEJSZE */
 }
 
 .mvp-box:hover .mvp-hover {
   display: block;
 }
 
-.achievement-card:hover .mvp-hover {
+.achievement-card:hover .mvp-hover,
+.achievement-card.mvp-open .mvp-hover {
   display: block;
 }
 
