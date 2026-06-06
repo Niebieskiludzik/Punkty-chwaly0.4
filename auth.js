@@ -16,8 +16,20 @@ function loadSharedNavStyles() {
   document.head.appendChild(link);
 }
 
+function initRegisterLink() {
+  const loginBox = document.getElementById("loginBox");
+  if (!loginBox || loginBox.querySelector(".register-link")) return;
+
+  const link = document.createElement("a");
+  link.href = "register.html";
+  link.className = "register-link";
+  link.textContent = "Rejestracja";
+  loginBox.appendChild(link);
+}
+
 function initGlobalNavMenu() {
   loadSharedNavStyles();
+  initRegisterLink();
 
   const navLeft = document.querySelector(".nav-left");
   if (!navLeft || navLeft.querySelector(".nav-menu-wrap")) return;
@@ -30,6 +42,7 @@ function initGlobalNavMenu() {
       <a href="index.html">🏆 Ranking główny</a>
       <a href="ranking.html">📅 Ranking miesięczny</a>
       <a href="rankingi.html">📊 Rankingi statystyk</a>
+      <a href="register.html">📝 Rejestracja</a>
       <a href="boisko.html">⚽ Umawianie na boisko</a>
     </div>
   `;
@@ -68,6 +81,7 @@ window.initAuthUI = async function () {
     if (!user) {
       if(userBox) userBox.style.display = "none";
       if(loginBox) loginBox.style.display = "flex";
+      initRegisterLink();
       return;
     }
 
