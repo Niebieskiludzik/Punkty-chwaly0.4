@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Rejestracja</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+<div class="navbar">
+
+  <div class="nav-left">
+    🏆 Ranking Chwały
+  </div>
+
+  <div class="nav-center">
+    <span id="navbarDate"></span>
+  </div>
+
+  <div class="nav-right">
+    <div id="loginBox">
+      <input id="email" placeholder="email">
+      <input id="password" type="password" placeholder="hasło">
+      <button id="loginBtn" onclick="login()">Zaloguj</button>
+      <div id="loginError"></div>
+    </div>
+
+    <div id="userBox" style="display:none;">
+      <span id="userName"></span>
+      <button onclick="logout()">Wyloguj</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="container">
+  <div class="card register-card">
+    <h1>Rejestracja</h1>
+
+    <div class="register-mode">
+      <label>
+        <input type="radio" name="playerMode" value="existing" checked>
+        Wybierz obecną osobę
+      </label>
+      <label>
+        <input type="radio" name="playerMode" value="new">
+        Dodaj nową osobę
+      </label>
+    </div>
+
+    <div id="existingPlayerBox" class="register-field">
+      <label for="playerSelect">Osoba</label>
+      <select id="playerSelect">
+        <option value="">Ładowanie...</option>
+      </select>
+    </div>
+
+    <div id="newPlayerBox" class="register-field hidden-field">
+      <label for="newPlayerName">Nazwa nowej osoby</label>
+      <input id="newPlayerName" placeholder="np. Janek">
+    </div>
+
+    <div class="register-field">
+      <label for="registerEmail">E-mail</label>
+      <input id="registerEmail" type="email" placeholder="email">
+    </div>
+
+    <div class="register-field">
+      <label for="registerPassword">Hasło</label>
+      <input id="registerPassword" type="password" placeholder="minimum 6 znaków">
+    </div>
+
+    <button id="registerBtn" class="register-submit">Utwórz konto</button>
+    <div id="registerMessage" class="register-message"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="register.js"></script>
+
+</body>
+</html>
