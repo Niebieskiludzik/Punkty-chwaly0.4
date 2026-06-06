@@ -39,6 +39,18 @@ function initMainRankingSortFix() {
     return Number(value.replace(/[^0-9.-]/g, "")) || 0;
   };
 
+  const applyRankStyles = (row, index) => {
+    row.classList.remove("gold", "silver", "bronze");
+    if (index === 0) row.classList.add("gold");
+    if (index === 1) row.classList.add("silver");
+    if (index === 2) row.classList.add("bronze");
+
+    const rankCell = row.children[0];
+    if (rankCell) {
+      rankCell.textContent = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : String(index + 1);
+    }
+  };
+
   const sortRows = () => {
     if (isSorting) return;
 
@@ -46,23 +58,16 @@ function initMainRankingSortFix() {
     const rows = Array.from(table.querySelectorAll("tr")).slice(1);
     if (!header || rows.length < 2) return;
 
-    isSorting = true;
+    const sortedRows = [...rows].sort((a, b) => parsePoints(b) - parsePoints(a));
+    const alreadySorted = rows.every((row, index) => row === sortedRows[index]);
+    if (alreadySorted) return;
 
-    rows.sort((a, b) => parsePoints(b) - parsePoints(a));
+    isSorting = true;
     table.innerHTML = "";
     table.appendChild(header);
 
-    rows.forEach((row, index) => {
-      row.classList.remove("gold", "silver", "bronze");
-      if (index === 0) row.classList.add("gold");
-      if (index === 1) row.classList.add("silver");
-      if (index === 2) row.classList.add("bronze");
-
-      const rankCell = row.children[0];
-      if (rankCell) {
-        rankCell.textContent = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : String(index + 1);
-      }
-
+    sortedRows.forEach((row, index) => {
+      applyRankStyles(row, index);
       table.appendChild(row);
     });
 
