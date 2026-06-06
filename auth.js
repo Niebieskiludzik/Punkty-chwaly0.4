@@ -27,9 +27,56 @@ function initRegisterLink() {
   loginBox.appendChild(link);
 }
 
+function initMainRankingSortFix() {
+  const table = document.getElementById("rankingTable");
+  if (!table || table.dataset.visiblePointsSortReady) return;
+
+  table.dataset.visiblePointsSortReady = "true";
+  let isSorting = false;
+
+  const parsePoints = row => {
+    const value = row.children[2]?.textContent || "0";
+    return Number(value.replace(/[^0-9.-]/g, "")) || 0;
+  };
+
+  const sortRows = () => {
+    if (isSorting) return;
+
+    const header = table.querySelector("tr");
+    const rows = Array.from(table.querySelectorAll("tr")).slice(1);
+    if (!header || rows.length < 2) return;
+
+    isSorting = true;
+
+    rows.sort((a, b) => parsePoints(b) - parsePoints(a));
+    table.innerHTML = "";
+    table.appendChild(header);
+
+    rows.forEach((row, index) => {
+      row.classList.remove("gold", "silver", "bronze");
+      if (index === 0) row.classList.add("gold");
+      if (index === 1) row.classList.add("silver");
+      if (index === 2) row.classList.add("bronze");
+
+      const rankCell = row.children[0];
+      if (rankCell) {
+        rankCell.textContent = index === 0 ? "🥇" : index === 1 ? "🥈" : index === 2 ? "🥉" : String(index + 1);
+      }
+
+      table.appendChild(row);
+    });
+
+    isSorting = false;
+  };
+
+  new MutationObserver(sortRows).observe(table, { childList: true, subtree: true });
+  setTimeout(sortRows, 0);
+}
+
 function initGlobalNavMenu() {
   loadSharedNavStyles();
   initRegisterLink();
+  initMainRankingSortFix();
 
   const navLeft = document.querySelector(".nav-left");
   if (!navLeft || navLeft.querySelector(".nav-menu-wrap")) return;
