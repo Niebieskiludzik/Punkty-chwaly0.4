@@ -42,6 +42,7 @@ function initGlobalNavMenu() {
       <a href="index.html">🏆 Ranking główny</a>
       <a href="ranking.html">📅 Ranking miesięczny</a>
       <a href="rankingi.html">📊 Rankingi statystyk</a>
+      <a href="oceny.html">🧾 Tabela ocen (TESTY!)</a>
       <a href="register.html">📝 Rejestracja</a>
       <a href="boisko.html">⚽ Umawianie na boisko</a>
     </div>
