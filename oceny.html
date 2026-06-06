@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <title>Tabela ocen</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="nav.css">
+  <link rel="icon" type="image/png" href="favicon.png">
+</head>
+<body>
+
+<div class="navbar">
+
+  <div class="nav-left">
+    🏆 Ranking Chwały
+  </div>
+
+  <div class="nav-center">
+    <span id="navbarDate"></span>
+  </div>
+
+  <div class="nav-right">
+    <div id="loginBox">
+      <input id="email" placeholder="email">
+      <input id="password" type="password" placeholder="hasło">
+      <button id="loginBtn" onclick="login()">Zaloguj</button>
+      <div id="loginError"></div>
+    </div>
+
+    <div id="userBox" style="display:none;">
+      <span id="userName"></span>
+      <button onclick="logout()">Wyloguj</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="container votes-page">
+  <div class="card votes-card">
+    <div class="votes-header">
+      <h1>Tabela ocen</h1>
+      <p id="votesSummary">Ładowanie rund...</p>
+    </div>
+
+    <div id="roundPicker" class="round-picker"></div>
+    <div id="votesMatrix" class="votes-matrix-wrap"></div>
+    <div id="votesCards" class="votes-mobile-list"></div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="auth.js"></script>
+<script src="oceny.js"></script>
+
+</body>
+</html>
