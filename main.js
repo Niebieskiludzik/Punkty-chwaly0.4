@@ -65,25 +65,37 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   /* ================= ROUND ================= */
 
-  async function ensureRound(date) {
+  async function ensureRound(date, shouldCreate = false) {
 
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from('rounds')
       .select('*')
       .eq('round_date', date)
+      .limit(1)
       .maybeSingle();
 
-    if (!data) {
-      const { data: newRound } = await supabase
-        .from('rounds')
-        .insert({ round_date: date })
-        .select()
-        .single();
+    if (error) throw error;
 
-      currentRoundId = newRound.id;
-    } else {
+    if (data) {
       currentRoundId = data.id;
+      return currentRoundId;
     }
+
+    if (!shouldCreate) {
+      currentRoundId = null;
+      return null;
+    }
+
+    const { data: newRound, error: insertError } = await supabase
+      .from('rounds')
+      .insert({ round_date: date })
+      .select()
+      .single();
+
+    if (insertError) throw insertError;
+
+    currentRoundId = newRound.id;
+    return currentRoundId;
   }
 
   /* ================= PLAYERS ================= */
@@ -106,7 +118,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       email: p.email
     }));
 
-    players.sort((a, b) => b.rating - a.rating);
+    players.sort((a, b) => ((b.rating || 0) + (b.manual_points || 0)) - ((a.rating || 0) + (a.manual_points || 0)));
 
     renderRanking();
     renderPanels();
@@ -115,17 +127,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   async function loadYesterdayRatings() {
 
-  const selectedDate = new Date(datePicker.value);
-
-  const yesterday = new Date(selectedDate);
-  yesterday.setDate(selectedDate.getDate() - 1);
-
-  const yesterdayStr = yesterday.toISOString().split("T")[0];
-
   const { data: round } = await supabase
     .from("rounds")
     .select("id")
-    .eq("round_date", yesterdayStr)
+    .lt("round_date", datePicker.value)
+    .order("round_date", { ascending: false })
+    .limit(1)
     .maybeSingle();
 
   yesterdayRatings = {};
@@ -183,6 +190,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   players.forEach((p, i) => {
 
+    const visiblePoints = (p.rating || 0) + (p.manual_points || 0);
     const prev = yesterdayRatings[p.id] ?? p.rating;
     const diff = Math.round(p.rating - prev);
 
@@ -216,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async () => {
           <span class="avatar">${p.avatar || "👤"}</span>
           ${p.name}
         </td>
-        <td>${Math.round((p.rating || 0) + (p.manual_points || 0))}</td>
+        <td>${Math.round(visiblePoints)}</td>
         <td class="${diffClass}">
           ${diffDisplay}
         </td>
@@ -324,86 +332,6 @@ window.goToProfile = function(id) {
     });
   }
 
-/*------------------MVP-------------------*/
-  
-async function calculateAndSaveMVP() {
-  if (!currentRoundId) return;
-
-  // 🔎 znajdź aktualną rundę
-  const { data: currentRound } = await supabase
-    .from("rounds")
-    .select("round_date")
-    .eq("id", currentRoundId)
-    .single();
-
-  if (!currentRound) return;
-
-  // 🔎 znajdź poprzednią rundę (dzień wcześniej)
-  const prevDate = new Date(currentRound.round_date);
-  prevDate.setDate(prevDate.getDate() - 1);
-
-  const prevDateStr = prevDate.toISOString().split("T")[0];
-
-  const { data: prevRound } = await supabase
-    .from("rounds")
-    .select("id")
-    .eq("round_date", prevDateStr)
-    .maybeSingle();
-
-  // 🔎 pobierz obecne punkty
-  const { data: today } = await supabase
-    .from("ranking_history")
-    .select("player_id, points")
-    .eq("round_id", currentRoundId);
-
-  if (!today || today.length === 0) return;
-
-  // 🔎 pobierz wczorajsze punkty (jeśli istnieją)
-  let yesterdayMap = {};
-
-  if (prevRound) {
-    const { data: yesterday } = await supabase
-      .from("ranking_history")
-      .select("player_id, points")
-      .eq("round_id", prevRound.id);
-
-    yesterday?.forEach(row => {
-      yesterdayMap[row.player_id] = row.points;
-    });
-  }
-
-  // 🔥 licz gain
-  let bestPlayer = null;
-  let bestGain = -Infinity;
-
-  today.forEach(p => {
-    const prev = yesterdayMap[p.player_id] ?? 0;
-    const gain = p.points - prev;
-
-    if (gain > bestGain && gain > 0) {
-      bestGain = gain;
-      bestPlayer = p.player_id;
-    }
-  });
-
-  if (!bestPlayer) return;
-
-  // usuń stare MVP tej rundy
-  await supabase
-    .from("mvp_history")
-    .delete()
-    .eq("round_id", currentRoundId);
-
-  // zapisz nowe MVP
-  await supabase
-    .from("mvp_history")
-    .insert({
-      round_id: currentRoundId,
-      player_id: bestPlayer,
-      points_gain: bestGain
-    });
-}
-  
   /* ================= SAVE ================= */
 
   window.saveVotes = async function (voterName) {
@@ -414,6 +342,8 @@ async function calculateAndSaveMVP() {
 
       const voter = players.find(p => p.name === voterName);
       if (!voter) return;
+
+      await ensureRound(datePicker.value, true);
 
       for (let player of players) {
 
@@ -428,7 +358,7 @@ async function calculateAndSaveMVP() {
           player_id: player.id,
           voter_name: voterName,
           score: val
-        });
+        }, { onConflict: 'round_id,voter_name,player_id' });
       }
 
       await supabase.rpc("calculate_all");
@@ -436,7 +366,6 @@ async function calculateAndSaveMVP() {
       await supabase.rpc("calculate_daily_mvp");
 
       await loadPlayers();
-      await calculateAndSaveMVP();
       await loadLastMVP();
 
       hideLoaderSuccess();
@@ -448,6 +377,8 @@ async function calculateAndSaveMVP() {
   };
 
   window.markAbsent = async function (id) {
+    await ensureRound(datePicker.value, true);
+
     await supabase.from('absences').insert({
       player_id: id,
       round_id: currentRoundId
@@ -702,7 +633,7 @@ async function init() {
     loginBox.style.display = "none";
   }
 
-  await ensureRound(datePicker.value);
+  await ensureRound(datePicker.value, false);
   await loadYesterdayRatings();
   await loadPlayers();
   await loadLastMVP();
