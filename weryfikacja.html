@@ -1,60 +1,116 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aktywacja konta - Ranking Chwały</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Konto aktywowane – Ranking Chwały</title>
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
     body {
-      background-color: #0b0e14;
+      background: linear-gradient(135deg, #031926 0%, #0A2E46 100%);
       color: #ffffff;
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      min-height: 100vh;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
-      height: 100vh;
-      margin: 0;
-      text-align: center;
       padding: 20px;
     }
     .card {
-      background-color: #161b26;
-      border: 1.5px solid #ffd700;
-      border-radius: 20px;
-      padding: 32px 24px;
-      max-width: 420px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+      background: rgba(10, 46, 70, 0.85);
+      backdrop-filter: blur(12px);
+      border: 2px solid rgba(255, 152, 0, 0.4);
+      border-radius: 28px;
+      padding: 36px 28px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
     }
-    .icon { font-size: 48px; margin-bottom: 12px; }
-    h1 { color: #ffd700; font-size: 22px; margin: 0 0 12px; }
-    p { color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 24px; }
-    .btn {
-      background: linear-gradient(135deg, #fc5c04, #ffd700);
-      color: #000;
-      font-weight: bold;
-      text-decoration: none;
-      padding: 14px 28px;
-      border-radius: 12px;
+    .icon {
+      font-size: 64px;
+      margin-bottom: 16px;
       display: inline-block;
+      animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    @keyframes pop {
+      0% { transform: scale(0.4); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #FFB74D;
+      margin-bottom: 12px;
+    }
+    p {
       font-size: 15px;
+      color: #B2EBF2;
+      line-height: 1.5;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(0, 230, 118, 0.15);
+      border: 1px solid #00E676;
+      color: #00E676;
+      font-weight: bold;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      background: linear-gradient(135deg, #FF9800 0%, #FFB74D 100%);
+      color: #031926;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 800;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(255, 152, 0, 0.35);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .hint {
+      margin-top: 18px;
+      font-size: 12px;
+      color: #90A4AE;
     }
   </style>
   <script>
+    // Próba automatycznego otwarcia aplikacji po załadowaniu
     window.onload = function() {
-      // Automatyczna próba otwarcia aplikacji na telefonie Android
       setTimeout(function() {
-        window.location.href = "intent://ranking#Intent;scheme=rankingapp;package=com.example;end";
-      }, 800);
+        window.location.href = "rankingchwaly://open";
+      }, 500);
     };
   </script>
 </head>
 <body>
   <div class="card">
-    <div class="icon">✅</div>
-    <h1>Konto zostało aktywowane!</h1>
-    <p>Twój e-mail został pomyślnie zweryfikowany. Za chwilę nastąpi automatyczne przekierowanie do aplikacji.</p>
-    <a href="intent://ranking#Intent;scheme=rankingapp;package=com.example;end" class="btn">Otwórz aplikację</a>
+    <div class="icon">🏖️ ⚽</div>
+    <div class="badge">✓ Adres e-mail potwierdzony</div>
+    <h1>Możesz wrócić do aplikacji!</h1>
+    <p>
+      Twoje konto zostało pomyślnie aktywowane. Otwórz aplikację <strong>Ranking Chwały</strong> na swoim telefonie i zaloguj się wpisując swój e-mail i hasło.
+    </p>
+
+    <a href="rankingchwaly://open" class="btn">
+      Przejdź do aplikacji 🚀
+    </a>
+
+    <div class="hint">
+      Jeśli przycisk nie zadziała, po prostu przełącz się do aplikacji z menu ostatnich zadań telefonu.
+    </div>
   </div>
 </body>
 </html>
